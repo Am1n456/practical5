@@ -1,82 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Angular Js Practical</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-    <script type="text/javascript">
-        var app = angular.module('studentApp', []);
-        app.controller('studentController', function($scope) {
-            $scope.students = [];
-
-            $scope.addStudent = function() {
-                if ($scope.student.id) {
-                    for (var i = 0; i < $scope.students.length; i++) {
-                        if ($scope.students[i].id === $scope.student.id) {
-                            $scope.students[i] = angular.copy($scope.student);
-                            break;
-                        }
-                    }
-                } else {
-                    var new_student = {
-                        id: $scope.students.length + 1, // Generate a unique ID
-                        name: $scope.student.name,
-                        age: $scope.student.age,
-                        course: $scope.student.course
-                    };
-                    $scope.students.push(new_student);
-                }
-                $scope.student = {}; // Clear form after add/update
-            };
-
-            $scope.editStudent = function(student) {
-                $scope.student = angular.copy(student);
-            };
-
-            $scope.deleteStudent = function(student) {
-                var index = $scope.students.indexOf(student);
-                if (index > -1) {
-                    $scope.students.splice(index, 1);
-                }
-            };
-        });
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var appname = angular.module("App",[]);
+        appname.controller('formctrl',function($scope){
+                $scope.sendform = function(){
+                $scope.msg = "Form Submitted Successfully!!!!";
+            }
+        })
     </script>
+    <style>
+        input.ng-invalid{
+            background-color: #e7c1b2;
+        }
+        input.ng-valid{
+            background-color: #68a378;
+        }
+        .error{
+            color: rgb(250, 21, 21);
+        }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+    <title>Form Validation</title>
 </head>
-<body ng-app="studentApp" ng-controller="studentController">
+<body ng-app="App" ng-controller="formctrl">
+    <h1>Form Validations</h1>
     <div>
-        <h2>Student Data</h2>
-        <form ng-submit="addStudent()"> 
-            <label>Name: </label>
-            <input type="text" ng-model="student.name" required placeholder="Enter Student Name" />
+        <form name="personform" ng-submit="sendform()">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" ng-model="person.name" required />
+            <span class="error" ng-show="personform.name.$touched && personform.name.$invalid">Required</span>
+            <br><br>
 
-            <label>Age: </label>
-            <input type="number" ng-model="student.age" required placeholder="Enter Student Age" />
+            <label for="address">Address</label>
+            <input type="text" name="address" id="address" ng-model="person.address" required />
+            <span class="error" ng-show="personform.address.$error.required">Required</span>
+            <br><br>
 
-            <label>Course: </label>
-            <input type="text" ng-model="student.course" required placeholder="Enter Course" />
+            <label for="contact">Contact Number</label>
+            <input type="number", id="mobile" name="mobile" ng-maxlength="10" ng-model="person.mobile" required />
+            <span class="error" ng-show="personform.mobile.$error.required">Required Number</span>
+            <span class="error" ng-show="personform.mobile.$error.maxlength">Max 10 Numbers.</span>
+            <br><br>
 
-            <button type="submit">Add/Update Student</button>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" ng-model="person.email" ng-pattern="/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/" required />
+            <span class="error" ng-show="personform.email.$error.required">Required</span>
+            <span class="error" ng-show="personform.email.$dirty && personform.email.$error.pattern">Please Enter Valid Email</span>
+            <br><br>
+
+            <input type="checkbox" ng-model="person.terms" name="terms" id="terms" required />
+            <label for="terms">I agree to the terms</label>
+            <span class="error" ng-show="personform.terms.$error.required">You must agree to the terms</span>
+            <br><br>
+
+            <button type="submit">Submit Form</button>
+            <br><br>
+            <span><b>{{msg}}</b></span>
         </form>
-
-        <h3>Student List</h3>
-        <table border="1">
-            <tr>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Course</th>
-                <th>Actions</th>
-            </tr>
-
-            <tr ng-repeat="s in students">
-                <td>{{s.name}}</td>
-                <td>{{s.age}}</td>
-                <td>{{s.course}}</td>
-                <td>
-                    <button ng-click="editStudent(s)">Edit</button>
-                    <button ng-click="deleteStudent(s)">Delete</button>
-                </td>
-            </tr>
-        </table>
     </div>
 </body>
 </html>
-+
