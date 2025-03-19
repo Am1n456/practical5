@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Angular Js Practical</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module('studentApp', []);
+        app.controller('studentController', function($scope) {
+            $scope.students = [];
+
+            $scope.addStudent = function() {
+                if ($scope.student.id) {
+                    for (var i = 0; i < $scope.students.length; i++) {
+                        if ($scope.students[i].id === $scope.student.id) {
+                            $scope.students[i] = angular.copy($scope.student);
+                            break;
+                        }
+                    }
+                } else {
+                    var new_student = {
+                        id: $scope.students.length + 1, // Generate a unique ID
+                        name: $scope.student.name,
+                        age: $scope.student.age,
+                        course: $scope.student.course
+                    };
+                    $scope.students.push(new_student);
+                }
+                $scope.student = {}; // Clear form after add/update
+            };
+
+            $scope.editStudent = function(student) {
+                $scope.student = angular.copy(student);
+            };
+
+            $scope.deleteStudent = function(student) {
+                var index = $scope.students.indexOf(student);
+                if (index > -1) {
+                    $scope.students.splice(index, 1);
+                }
+            };
+        });
+    </script>
+</head>
+<body ng-app="studentApp" ng-controller="studentController">
+    <div>
+        <h2>Student Data</h2>
+        <form ng-submit="addStudent()"> 
+            <label>Name: </label>
+            <input type="text" ng-model="student.name" required placeholder="Enter Student Name" />
+
+            <label>Age: </label>
+            <input type="number" ng-model="student.age" required placeholder="Enter Student Age" />
+
+            <label>Course: </label>
+            <input type="text" ng-model="student.course" required placeholder="Enter Course" />
+
+            <button type="submit">Add/Update Student</button>
+        </form>
+
+        <h3>Student List</h3>
+        <table border="1">
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Course</th>
+                <th>Actions</th>
+            </tr>
+
+            <tr ng-repeat="s in students">
+                <td>{{s.name}}</td>
+                <td>{{s.age}}</td>
+                <td>{{s.course}}</td>
+                <td>
+                    <button ng-click="editStudent(s)">Edit</button>
+                    <button ng-click="deleteStudent(s)">Delete</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
++
